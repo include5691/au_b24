@@ -1,6 +1,6 @@
 import os
 
-def _get_url(method: str) -> str | None:
+def get_url(method: str) -> str | None:
     """
     Get url by method 
     
