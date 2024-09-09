@@ -10,10 +10,8 @@ def post(method: str, data: dict) -> list | dict | None:
     if not isinstance(method, str) or not isinstance(data, dict):
         return None
     url = get_url(method)
-    # payload = json.dumps(data)
     try:
         with requests.Session() as session:
-            # response = session.post(url=url, data=payload, timeout=10)
             response = session.post(url=url, json=data, timeout=10)
             if response.status_code != 200:
                 logging.error(f"Error in posting method, code: {response.status_code}")
@@ -23,7 +21,7 @@ def post(method: str, data: dict) -> list | dict | None:
         logging.error(f"Error in posting method: {e}")
         return None
     try:
-        return json.loads(text)
+        return json.loads(text).get("result")
     except JSONDecodeError as e:
         logging.error(f"Error in posting method, loading json: {e}")
         return None
@@ -35,10 +33,8 @@ def get(method: str, data: dict) -> dict | None:
     if "." not in method or method.split(".")[-1] != "get":
         return None
     url = get_url(method)
-    # headers = {"Content-Type": "application/json"}
     try:
         with requests.Session() as session:
-            print(url)
             response = session.get(url=url, params=data, timeout=10)
             if response.status_code != 200:
                 logging.error(f"Error in posting method, code: {response.status_code}")
@@ -48,7 +44,7 @@ def get(method: str, data: dict) -> dict | None:
         logging.error(f"Error in getting method: {e}")
         return None
     try:
-        return json.loads(text)
+        return json.loads(text).get("result")
     except JSONDecodeError as e:
         logging.error(f"Error in getting method, loading json: {e}")
         return None
