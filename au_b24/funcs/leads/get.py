@@ -28,3 +28,17 @@ def get_leads(filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC"
         f.update({">ID": 0})
     else:
         f.update({"<ID": 2**32})
+    if "<ID" in filters:
+        id_key = "<ID"
+    else:
+        id_key = ">ID"
+    f.update(filters)
+    leads_ = []
+    while True:
+        leads : list[dict] | None = post("crm.lead.list", {"filter": f, "select": select, "order": {"ID": order}, "start": -1})
+        if not leads:
+            break
+        for lead in leads:
+            f[id_key] = lead["ID"]
+            leads_.append(lead)
+    return leads_
