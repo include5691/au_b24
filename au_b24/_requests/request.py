@@ -14,7 +14,7 @@ def post(method: str, data: dict) -> list | dict | None:
         with requests.Session() as session:
             response = session.post(url=url, json=data, timeout=10)
             if response.status_code != 200:
-                logging.error(f"Error in posting method, code: {response.status_code}")
+                logging.debug(f"Error in posting method, code: {response.status_code}")
                 return None
             text: bytes = response.text
     except RequestException as e:
@@ -39,7 +39,7 @@ def get(method: str, data: dict) -> dict | None:
         with requests.Session() as session:
             response = session.get(url=url, params=data, timeout=10)
             if response.status_code != 200:
-                logging.error(f"Error in posting method, code: {response.status_code}")
+                logging.debug(f"Error in posting method, code: {response.status_code}")
                 return None
             text: bytes = response.text
     except RequestException as e:
