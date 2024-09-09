@@ -33,6 +33,8 @@ def get(method: str, data: dict) -> dict | None:
     if "." not in method or method.split(".")[-1] != "get":
         return None
     url = get_url(method)
+    if not url:
+        return None
     try:
         with requests.Session() as session:
             response = session.get(url=url, params=data, timeout=10)
