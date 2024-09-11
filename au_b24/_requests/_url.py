@@ -1,4 +1,5 @@
 import os
+import logging
 
 def get_url(method: str) -> str | None:
     """
@@ -13,6 +14,7 @@ def get_url(method: str) -> str | None:
     scope: str = method.split(".")[0]
     usertoken = os.getenv(f"{scope.upper()}_USERTOKEN")
     if not usertoken:
+        logging.error(f"USERTOKEN for {scope} not found")
         return None
     bitrix_id = os.getenv("BITRIX_ID")
     if not bitrix_id:
