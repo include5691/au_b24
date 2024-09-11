@@ -16,14 +16,14 @@ def post(method: str, data: dict) -> list | dict | None:
             if response.status_code != 200:
                 logging.debug(f"Error in posting method, code: {response.status_code}")
                 return None
-            text: bytes = response.text
+            json = response.json()
+            if not json or not isinstance(json, dict):
+                return None
+            if "result" in json:
+                return json["result"]
+            return None
     except RequestException as e:
         logging.error(f"Error in posting method: {e}")
-        return None
-    try:
-        return json.loads(text).get("result")
-    except JSONDecodeError as e:
-        logging.error(f"Error in posting method, loading json: {e}")
         return None
 
 def get(method: str, data: dict) -> dict | None:
@@ -41,12 +41,12 @@ def get(method: str, data: dict) -> dict | None:
             if response.status_code != 200:
                 logging.debug(f"Error in posting method, code: {response.status_code}")
                 return None
-            text: bytes = response.text
+            json = response.json()
+            if not json or not isinstance(json, dict):
+                return None
+            if "result" in json:
+                return json["result"]
+            return None
     except RequestException as e:
         logging.error(f"Error in getting method: {e}")
-        return None
-    try:
-        return json.loads(text).get("result")
-    except JSONDecodeError as e:
-        logging.error(f"Error in getting method, loading json: {e}")
         return None
