@@ -1,4 +1,4 @@
-from .._requests import post
+from ..requests import post
 
 def notify_user(user_id: int | str, message: str) -> int | None:
     """Add notification to user. Returns notification ID"""

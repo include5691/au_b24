@@ -1,5 +1,5 @@
 from typing import Literal, Callable
-from ..._requests import post, get
+from ...requests import post, get
 
 def parse_leads(fn: Callable):
     def wrapper(filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC"):
