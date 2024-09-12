@@ -2,7 +2,7 @@ from typing import Literal, Callable
 from ...requests import post, get
 
 def parse_leads(fn: Callable):
-    def wrapper(filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC"):
+    def wrapper(filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC", **kwargs):
         """
         Parse leads by filters with given function
         
@@ -36,5 +36,5 @@ def parse_leads(fn: Callable):
                 break
             for lead in leads:
                 f[id_key] = lead["ID"]
-                fn(lead)
+                fn(lead, **kwargs)
     return wrapper
