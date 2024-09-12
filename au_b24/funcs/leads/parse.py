@@ -1,5 +1,7 @@
 from typing import Literal, Callable
-from ...requests import post, get
+from ...requests import post
+
+class StopParsing(Exception): ...
 
 def parse_leads(fn: Callable):
     def wrapper(filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC", **kwargs):
@@ -36,5 +38,8 @@ def parse_leads(fn: Callable):
                 break
             for lead in leads:
                 f[id_key] = lead["ID"]
-                fn(lead, **kwargs)
+                try:
+                    fn(lead, **kwargs)
+                except StopParsing:
+                    return
     return wrapper
