@@ -1,15 +1,20 @@
+import time
 import json
 import logging
 import requests
 from requests.exceptions import RequestException
 from json.decoder import JSONDecodeError
 from ._url import get_url
+from ._init import pause_
 
 def post(method: str, data: dict) -> list | dict | None:
     """Post request method for b24 with given data"""
     if not isinstance(method, str) or not isinstance(data, dict):
         return None
     url = get_url(method)
+    global pause_
+    if pause_:
+        time.sleep(pause_)
     try:
         with requests.Session() as session:
             response = session.post(url=url, json=data, timeout=10)
@@ -35,6 +40,9 @@ def get(method: str, data: dict) -> dict | None:
     url = get_url(method)
     if not url:
         return None
+    global pause_
+    if pause_:
+        time.sleep(pause_)
     try:
         with requests.Session() as session:
             response = session.get(url=url, params=data, timeout=10)
