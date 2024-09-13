@@ -1,5 +1,5 @@
 from typing import Literal
-from ..requests import post
+from ..requests_ import post
 
 def add_comment(entity_id: int | str, entity_type: Literal["lead", "deal"], comment: str) -> int | None:
     """

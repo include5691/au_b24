@@ -1,4 +1,4 @@
-from ...requests import post
+from ...requests_ import post
 
 def update_lead(lead_id: int | str, fields: dict) -> bool | None:
     """Update a lead with given id and fields"""

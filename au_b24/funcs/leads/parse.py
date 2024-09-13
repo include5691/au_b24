@@ -1,5 +1,5 @@
 from typing import Literal, Callable
-from ...requests import post
+from ...requests_ import post
 
 class StopParsing(Exception): ...
 

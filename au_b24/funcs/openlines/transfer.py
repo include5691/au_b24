@@ -1,4 +1,4 @@
-from ...requests import post, get
+from ...requests_ import post, get
 
 def intercept_openline(ol_id: int | str) -> bool | None:
     """

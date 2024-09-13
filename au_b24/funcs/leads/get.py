@@ -1,5 +1,5 @@
 from typing import Literal
-from ...requests import post, get
+from ...requests_ import post, get
 
 def get_lead(lead_id) -> dict | None:
     """Get lead by given lead_id"""
