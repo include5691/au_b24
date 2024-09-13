@@ -1,5 +1,5 @@
 from typing import Literal
-from ...requests_ import post
+from ...reqs import post
 
 def get_openlines(entity_id: int | str, entity_type: Literal["lead", "deal", "contact"]) -> list[dict] | None:
     """Get current openlines by given entity_id and entity_type"""

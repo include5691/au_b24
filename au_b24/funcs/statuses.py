@@ -1,4 +1,4 @@
-from ..requests_ import post
+from ..reqs import post
 
 def get_sources() -> dict[str, str] | None:
     """Get sources of leads"""

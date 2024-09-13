@@ -1,4 +1,4 @@
-from ...requests_ import get
+from ...reqs import get
 
 def get_user(user_id: int | str) -> dict | None:
     """Get user by user_id"""
