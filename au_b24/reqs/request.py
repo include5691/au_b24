@@ -28,7 +28,7 @@ def post(method: str, data: dict) -> list | dict | None:
                 return json["result"]
             return None
     except RequestException as e:
-        logging.error(f"Error in posting method: {e}")
+        logging.error(f"Error in posting method {method}: {e}")
         return None
 
 def get(method: str, data: dict) -> dict | None:
@@ -56,5 +56,5 @@ def get(method: str, data: dict) -> dict | None:
                 return json["result"]
             return None
     except RequestException as e:
-        logging.error(f"Error in getting method: {e}")
+        logging.error(f"Error in posting method {method}: {e}")
         return None

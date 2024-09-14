@@ -18,5 +18,6 @@ def get_url(method: str) -> str | None:
         return None
     bitrix_id = os.getenv("BITRIX_ID")
     if not bitrix_id:
+        logging.error("BITRIX_ID not found")
         return None
     return f"https://{bitrix_id}.bitrix24.ru/rest{usertoken}/{method}.json"
