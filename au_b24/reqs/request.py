@@ -2,6 +2,7 @@ import time
 import json
 import logging
 import requests
+from requests import Response
 from requests.exceptions import RequestException
 from json.decoder import JSONDecodeError
 from ._url import get_url
@@ -19,7 +20,7 @@ def post(method: str, data: dict) -> list | dict | None:
         with requests.Session() as session:
             response = session.post(url=url, json=data, timeout=10)
             if response.status_code != 200:
-                logging.debug(f"Error in posting method, code: {response.status_code}")
+                logging.debug(f"Error in posting method, code: {response.status_code} with response: {response.text}")
                 return None
             json = response.json()
             if not json or not isinstance(json, dict):
@@ -47,7 +48,7 @@ def get(method: str, data: dict) -> dict | None:
         with requests.Session() as session:
             response = session.get(url=url, params=data, timeout=10)
             if response.status_code != 200:
-                logging.debug(f"Error in posting method, code: {response.status_code}")
+                logging.debug(f"Error in posting method, code: {response.status_code} with response: {response.text}")
                 return None
             json = response.json()
             if not json or not isinstance(json, dict):
