@@ -1,18 +1,19 @@
 import os
 import logging
 
-def get_url(method: str) -> str | None:
+def get_url(method: str, usertoken: str | None = None) -> str | None:
     """
     Get url by method 
     
     `method`: rest api b24 method. Method examples: *crm.lead.get*, *user.get*
+    'usertoken': usertoken for b24 rest api. If given - it will be used instead of one from .env file
     """
     if not method or not isinstance(method, str):
         return None
     if "." not in method:
         return None
     scope: str = method.split(".")[0]
-    usertoken = os.getenv(f"{scope.upper()}_USERTOKEN")
+    usertoken = usertoken or os.getenv(f"{scope.upper()}_USERTOKEN")
     if not usertoken:
         logging.error(f"USERTOKEN for {scope} not found")
         return None

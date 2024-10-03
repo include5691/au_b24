@@ -8,11 +8,14 @@ from json.decoder import JSONDecodeError
 from ._url import get_url
 from ._init import pause_
 
-def post(method: str, data: dict) -> list | dict | None:
-    """Post request method for b24 with given data"""
+def post(method: str, data: dict, usertoken: str | None = None) -> list | dict | None:
+    """
+    Post request method for b24 with given data
+    If usertoken is given - it will be used as auth token instead of one from .env file
+    """
     if not isinstance(method, str) or not isinstance(data, dict):
         return None
-    url = get_url(method)
+    url = get_url(method=method, usertoken=usertoken)
     global pause_
     if pause_:
         time.sleep(pause_)
