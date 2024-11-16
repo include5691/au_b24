@@ -5,13 +5,13 @@ def get_lead(lead_id) -> dict | None:
     """Get lead by given lead_id"""
     return get("crm.lead.get", {"id": lead_id})
 
-def get_leads(filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC"):
+def get_leads(filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC", limit: int | None = None) -> list[dict]:
     """
     Get leads by filters
-    
-    - ``filters``: filters by fields, allowing '<', '>' and '!' logical symbols, and grouping by []. ID filtering allowing too
-    - ``select``: list of selected fields
-    - ``order``: sorting by id
+
+    :param filters: filters by fields, allowing '<', '>' and '!' logical symbols, and grouping by []. ID filtering allowing too
+    :param select: list of selected fields
+    :param order: sorting by id
     """
     if not isinstance(filters, dict) or not isinstance(select, list):
         raise ValueError("Filters and select must be a dict and a list")
@@ -41,4 +41,6 @@ def get_leads(filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC"
         for lead in leads:
             f[id_key] = lead["ID"]
             leads_.append(lead)
+        if limit and len(leads_) >= limit:
+            break
     return leads_
