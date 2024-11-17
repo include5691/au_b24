@@ -13,8 +13,10 @@ def get_leads(filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC"
     :param select: list of selected fields
     :param order: sorting by id
     """
-    if not isinstance(filters, dict) or not isinstance(select, list):
-        raise ValueError("Filters and select must be a dict and a list")
+    if not isinstance(filters, dict):
+        raise ValueError("Filters and select must be a dict")
+    if not isinstance(select, list):
+        raise ValueError("Select must be a list")
     if order not in ("ASC", "DESC"):
         raise ValueError("Order must be 'ASC' or 'DESC'")
     if ">ID" in filters and "<ID" in filters:
@@ -39,8 +41,8 @@ def get_leads(filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC"
         if not leads:
             break
         for lead in leads:
+            if limit and len(leads_) >= limit:
+                return leads_
             f[id_key] = lead["ID"]
             leads_.append(lead)
-        if limit and len(leads_) >= limit:
-            break
     return leads_
