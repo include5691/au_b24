@@ -1,7 +1,7 @@
 from typing import Literal
 from ...reqs import post, get
 
-def get_lead(lead_id) -> dict | None:
+def get_lead(lead_id: str | int) -> dict | None:
     """Get lead by given lead_id"""
     return get("crm.lead.get", {"id": lead_id})
 
