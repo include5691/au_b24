@@ -21,6 +21,8 @@ def get_deals(filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC"
         raise ValueError("Order must be 'ASC' or 'DESC'")
     if ">ID" in filters and "<ID" in filters:
         raise ValueError("ID filtering can't be used with '<' and '>'")
+    if limit and limit <= 0:
+        raise ValueError("Limit must be greater than 0")
     f = {}
     if ">ID" in filters:
         order = "ASC"
@@ -35,14 +37,14 @@ def get_deals(filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC"
     else:
         id_key = ">ID"
     f.update(filters)
-    deals_ = []
+    result = []
     while True:
         deals : list[dict] | None = post("crm.deal.list", {"filter": f, "select": select, "order": {"ID": order}, "start": -1})
         if not deals:
             break
         for deal in deals:
-            if limit and len(deals_) >= limit:
-                return deals_
+            if limit and len(result) >= limit:
+                return result
             f[id_key] = deal["ID"]
-            deals_.append(deal)
-    return deals_
+            result.append(deal)
+    return result if result else None
