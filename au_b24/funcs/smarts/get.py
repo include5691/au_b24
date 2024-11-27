@@ -26,7 +26,7 @@ def get_smarts(entity_id: str | int, filters: dict, select: list, order: Literal
     if order not in ("ASC", "DESC"):
         raise ValueError("Order must be 'ASC' or 'DESC'")
     if ">ID" in filters and "<ID" in filters:
-        raise ValueError("ID filtering can't be used with '<' and '>'")
+        raise ValueError("ID filtering not allowing in smarts")
     if limit and limit <= 0:
         raise ValueError("Limit must be greater than 0")
     result = []

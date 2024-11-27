@@ -8,3 +8,4 @@ from .comments import add_comment
 from .notifications import notify_user
 from .statuses import get_sources, get_statuses
 from .dates import to_unix_time
+from .exceptions import StopParsing

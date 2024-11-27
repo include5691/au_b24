@@ -24,11 +24,7 @@ def get_contacts(filters: dict, select: list, order: Literal["ASC", "DESC"] = "A
     if limit and limit <= 0:
         raise ValueError("Limit must be greater than 0")
     f = {}
-    if ">ID" in filters:
-        order = "ASC"
-    elif "<ID" in filters:
-        order = "DESC"
-    elif order == "ASC":
+    if order == "ASC":
         f.update({">ID": 0})
     else:
         f.update({"<ID": 2**32})
