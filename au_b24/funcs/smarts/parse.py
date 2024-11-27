@@ -20,9 +20,12 @@ def parse_smarts(fn: Callable):
             raise ValueError("Empty select not allowed smarts")
         if order not in ("ASC", "DESC"):
             raise ValueError("Order must be 'ASC' or 'DESC'")
-        if ">ID" in filters and "<ID" in filters:
+        if "ID" in filters or "id" in filters:
             raise ValueError("ID filtering not allowing in smarts")
+        if "id" not in select and "ID" not in select:
+            select.append("id")
         start = 0
+        last_smart_id = None
         while True:
             response : list[dict] | None = post("crm.item.list", {"entityTypeId": entity_id, "filter": filters, "select": select, "order": {"ID": order}, "start": start})
             if not response:
@@ -32,6 +35,14 @@ def parse_smarts(fn: Callable):
                 break
             for smart in smarts:
                 start += 1
+                smart_id = smart.get("id")
+                if not last_smart_id:
+                    last_smart_id = smart_id
+                if order == "ASC" and smart_id < last_smart_id:
+                    return
+                elif order == "DESC" and smart_id > last_smart_id:
+                    return
+                last_smart_id = smart_id
                 try:
                     fn(smart, **kwargs)
                 except StopParsing:
