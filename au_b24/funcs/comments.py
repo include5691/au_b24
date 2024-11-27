@@ -1,7 +1,7 @@
 from typing import Literal
 from ..reqs import post
 
-def add_comment(entity_id: int | str, entity_type: Literal["lead", "deal"], text: str) -> int | None:
+def add_comment(entity_id: int | str, entity_type: Literal["lead", "deal", "dynamic_*"], text: str) -> int | None:
     """
     Add comment to entity
     Returns comment id
