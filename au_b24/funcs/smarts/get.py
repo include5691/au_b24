@@ -22,7 +22,7 @@ def get_smarts(entity_id: str | int, filters: dict, select: list, order: Literal
     if not isinstance(select, list):
         raise ValueError("Select must be a list")
     if not select:
-        raise ValueError("Empty select not allowed smarts")
+        raise ValueError("Empty select not allowed in smarts")
     if order not in ("ASC", "DESC"):
         raise ValueError("Order must be 'ASC' or 'DESC'")
     if ">ID" in filters and "<ID" in filters:
