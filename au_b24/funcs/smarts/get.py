@@ -29,7 +29,10 @@ def get_smarts(entity_id: str | int, filters: dict, select: list, order: Literal
         raise ValueError("ID filtering not allowing in smarts")
     if limit and limit <= 0:
         raise ValueError("Limit must be greater than 0")
+    if "id" not in select and "ID" not in select:
+        select.append("id")
     result = []
+    last_smart_id = None
     while True:
         response : list[dict] | None = post("crm.item.list", {"entityTypeId": entity_id, "filter": filters, "select": select, "order": {"ID": order}, "start": len(result)})
         if not response:
@@ -40,5 +43,13 @@ def get_smarts(entity_id: str | int, filters: dict, select: list, order: Literal
         for smart in smarts:
             if limit and len(result) >= limit:
                 return result
+            smart_id = smart.get("id")
+            if not last_smart_id:
+                last_smart_id = smart_id
+            if order == "ASC" and smart_id < last_smart_id:
+                return result
+            elif order == "DESC" and smart_id > last_smart_id:
+                return result
+            last_smart_id = smart_id
             result.append(smart)
     return result if result else None
