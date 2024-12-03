@@ -21,12 +21,10 @@ def get_contacts(filters: dict, select: list, order: Literal["ASC", "DESC"] = "A
         raise ValueError("Order must be 'ASC' or 'DESC'")
     if ">ID" in filters and "<ID" in filters:
         raise ValueError("ID filtering can't be used with '<' and '>'")
+    if limit and limit <= 0:
+        raise ValueError("Limit must be greater than 0")
     f = {}
-    if ">ID" in filters:
-        order = "ASC"
-    elif "<ID" in filters:
-        order = "DESC"
-    elif order == "ASC":
+    if order == "ASC":
         f.update({">ID": 0})
     else:
         f.update({"<ID": 2**32})
@@ -35,14 +33,14 @@ def get_contacts(filters: dict, select: list, order: Literal["ASC", "DESC"] = "A
     else:
         id_key = ">ID"
     f.update(filters)
-    contacts_ = []
+    result = []
     while True:
         contacts : list[dict] | None = post("crm.contact.list", {"filter": f, "select": select, "order": {"ID": order}, "start": -1})
         if not contacts:
             break
         for contact in contacts:
-            if limit and len(contacts_) >= limit:
-                return contacts_
+            if limit and len(result) >= limit:
+                return result
             f[id_key] = contact["ID"]
-            contacts_.append(contact)
-    return contacts_
+            result.append(contact)
+    return result if result else None

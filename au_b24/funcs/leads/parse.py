@@ -1,7 +1,6 @@
 from typing import Literal, Callable
 from ...reqs import post
-
-class StopParsing(Exception): ...
+from ..exceptions import StopParsing
 
 def parse_leads(fn: Callable):
     def wrapper(filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC", **kwargs):
@@ -12,18 +11,16 @@ def parse_leads(fn: Callable):
         - ``select``: list of selected fields
         - ``order``: sorting by id
         """
-        if not isinstance(filters, dict) or not isinstance(select, list):
-            raise ValueError("Filters and select must be a dict and a list")
+        if not isinstance(filters, dict):
+            raise ValueError("Filters and select must be a dict")
+        if not isinstance(select, list):
+            raise ValueError("Select must be a list")
         if order not in ("ASC", "DESC"):
             raise ValueError("Order must be 'ASC' or 'DESC'")
         if ">ID" in filters and "<ID" in filters:
             raise ValueError("ID filtering can't be used with '<' and '>'")
         f = {}
-        if ">ID" in filters:
-            order = "ASC"
-        elif "<ID" in filters:
-            order = "DESC"
-        elif order == "ASC":
+        if order == "ASC":
             f.update({">ID": 0})
         else:
             f.update({"<ID": 2**32})

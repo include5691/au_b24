@@ -1,4 +1,4 @@
-from ...reqs import post, get
+from ...reqs import post
 
 def delete_deal(deal_id: str | int) -> bool | None:
     """Delete deal by given lead_id"""
