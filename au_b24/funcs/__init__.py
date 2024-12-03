@@ -6,7 +6,7 @@ from .contacts import *
 from .openlines import *
 from .comments import add_comment
 from .notifications import notify_user
-from .statuses import get_sources, get_statuses
+from .statuses import *
 from .dates import to_unix_time
 from .exceptions import StopParsing
 from .fields import extract_enumerated_field_value, extract_enumerated_smart_field_value
