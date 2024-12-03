@@ -10,11 +10,13 @@ def get_leads(filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC"
     Get leads by filters
 
     :param filters: filters by fields, allowing '<', '>' and '!' logical symbols, and grouping by []. ID filtering allowing too
-    :param select: list of selected fields
+    :param select: list of selected fields. Passing '*' will select all fields
     :param order: sorting by id
     """
     if not isinstance(filters, dict):
         raise ValueError("Filters and select must be a dict")
+    if not select:
+            raise ValueError("Select is not provided")
     if not isinstance(select, list):
         raise ValueError("Select must be a list")
     if order not in ("ASC", "DESC"):

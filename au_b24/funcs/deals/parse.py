@@ -2,10 +2,10 @@ from typing import Literal, Callable
 from ...reqs import post
 from ..exceptions import StopParsing
 
-def parse_leads(fn: Callable):
+def parse_deals(fn: Callable):
     def wrapper(filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC", **kwargs):
         """
-        Parse leads by filters with given function
+        Parse deals by filters with given function
         
         - ``filters``: filters by fields, allowing '<', '>' and '!' logical symbols, and grouping by []. ID filtering allowing too
         - ``select``: list of selected fields. Passing '*' will select all fields
@@ -32,13 +32,13 @@ def parse_leads(fn: Callable):
             id_key = ">ID"
         filters_copy.update(filters)
         while True:
-            leads : list[dict] | None = post("crm.lead.list", {"filter": filters_copy, "select": select, "order": {"ID": order}, "start": -1})
-            if not leads:
+            deals : list[dict] | None = post("crm.deal.list", {"filter": filters_copy, "select": select, "order": {"ID": order}, "start": -1})
+            if not deals:
                 break
-            for lead in leads:
-                filters_copy[id_key] = lead["ID"]
+            for deal in deals:
+                filters_copy[id_key] = deal["ID"]
                 try:
-                    fn(lead, **kwargs)
+                    fn(deal, **kwargs)
                 except StopParsing:
                     return
     return wrapper
