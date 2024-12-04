@@ -1,8 +1,8 @@
 from ...reqs import post
 
-def get_stages(category_id: str | int) -> list[dict] | None:
-    """Get stages of deals"""
+def get_stages(category_id: str | int) -> dict[str, str] | None:
+    """Get stages of deals in `id: name` format"""
     stages = post("crm.dealcategory.stage.list", {"id": category_id})
     if not stages or not isinstance(stages, list):
         return None
-    return stages
+    return {stage["STATUS_ID"]: stage["NAME"] for stage in stages}
