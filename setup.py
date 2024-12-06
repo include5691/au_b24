@@ -9,6 +9,6 @@ setup(
     install_requires=[
         'requests',
         'cachetools',
-        "python-dotenv"
+        'python-dotenv'
     ],
 )
