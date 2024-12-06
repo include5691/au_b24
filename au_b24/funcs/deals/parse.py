@@ -24,12 +24,10 @@ def parse_deals(fn: Callable):
         filters_copy = {}
         if order == "ASC":
             filters_copy.update({">ID": 0})
+            id_key = ">ID"
         else:
             filters_copy.update({"<ID": 2**32})
-        if "<ID" in filters:
             id_key = "<ID"
-        else:
-            id_key = ">ID"
         filters_copy.update(filters)
         while True:
             deals : list[dict] | None = post("crm.deal.list", {"filter": filters_copy, "select": select, "order": {"ID": order}, "start": -1})

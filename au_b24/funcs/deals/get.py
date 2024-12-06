@@ -28,12 +28,10 @@ def get_deals(filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC"
     filters_copy = {}
     if order == "ASC":
         filters_copy.update({">ID": 0})
+        id_key = ">ID"
     else:
         filters_copy.update({"<ID": 2**32})
-    if "<ID" in filters:
         id_key = "<ID"
-    else:
-        id_key = ">ID"
     filters_copy.update(filters)
     result = []
     while True:

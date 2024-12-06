@@ -24,12 +24,10 @@ def parse_leads(fn: Callable):
         filters_copy = {}
         if order == "ASC":
             filters_copy.update({">ID": 0})
+            id_key = ">ID"
         else:
             filters_copy.update({"<ID": 2**32})
-        if "<ID" in filters:
             id_key = "<ID"
-        else:
-            id_key = ">ID"
         filters_copy.update(filters)
         while True:
             leads : list[dict] | None = post("crm.lead.list", {"filter": filters_copy, "select": select, "order": {"ID": order}, "start": -1})
