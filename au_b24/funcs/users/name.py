@@ -1,6 +1,6 @@
 from .get import get_user
 
-def get_user_name(user_id : int | str | None = None, user : dict | None = None) -> str | None:
+def get_user_name(user_id: int | str | None = None, user: dict | None = None) -> str | None:
     """
     Get user name by user_id or user dict
     """

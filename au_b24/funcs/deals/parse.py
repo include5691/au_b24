@@ -19,8 +19,8 @@ def parse_deals(fn: Callable):
             raise ValueError("Select must be a list")
         if order not in ("ASC", "DESC"):
             raise ValueError("Order must be 'ASC' or 'DESC'")
-        if ">ID" in filters and "<ID" in filters:
-            raise ValueError("ID filtering can't be used with '<' and '>'")
+        if {">ID", "<ID", ">=ID", "<=ID"} & set(filters):
+            raise ValueError("ID filtering can't be used with '<', '>', '>=' and '<='")
         filters_copy = {}
         if order == "ASC":
             filters_copy.update({">ID": 0})

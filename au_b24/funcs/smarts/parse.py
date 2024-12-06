@@ -6,7 +6,8 @@ def parse_smarts(fn: Callable):
     def wrapper(entity_id: str | int, filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC", **kwargs):
         """
         Parse smarts by filters with given function
-        
+        ID filtering allowed
+
         - ``entity_id``: entity type id
         - ``filters``: filters by fields, allowing '<', '>' and '!' logical symbols, and grouping by []. ID filtering allowing too
         - ``select``: list of selected fields
@@ -20,14 +21,12 @@ def parse_smarts(fn: Callable):
             raise ValueError("Empty select not allowed smarts")
         if order not in ("ASC", "DESC"):
             raise ValueError("Order must be 'ASC' or 'DESC'")
-        if "ID" in filters or "id" in filters:
-            raise ValueError("ID filtering not allowing in smarts")
         if "id" not in select and "ID" not in select:
             select.append("id")
         start = 0
         last_smart_id = None
         while True:
-            response : list[dict] | None = post("crm.item.list", {"entityTypeId": entity_id, "filter": filters, "select": select, "order": {"ID": order}, "start": start})
+            response: list[dict] | None = post("crm.item.list", {"entityTypeId": entity_id, "filter": filters, "select": select, "order": {"ID": order}, "start": start})
             if not response:
                 break
             smarts = response.get('items')

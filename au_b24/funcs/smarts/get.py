@@ -10,7 +10,8 @@ def get_smart(entity_id: str | int, smart_id: str | int) -> dict | None:
 
 def get_smarts(entity_id: str | int, filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC", limit: int | None = None) -> list[dict]:
     """
-    Get smarts by filters
+    Get smarts by filters  
+    ID filtering allowed
 
     :param entity_id: entity type id
     :param filters: filters by fields, allowing '<', '>' and '!' logical symbols, and grouping by []. ID filtering allowing too
@@ -25,8 +26,6 @@ def get_smarts(entity_id: str | int, filters: dict, select: list, order: Literal
         raise ValueError("Empty select not allowed in smarts")
     if order not in ("ASC", "DESC"):
         raise ValueError("Order must be 'ASC' or 'DESC'")
-    if ">ID" in filters and "<ID" in filters:
-        raise ValueError("ID filtering not allowing in smarts")
     if limit and limit <= 0:
         raise ValueError("Limit must be greater than 0")
     if "id" not in select and "ID" not in select:

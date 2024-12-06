@@ -21,28 +21,28 @@ def get_leads(filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC"
         raise ValueError("Select must be a list")
     if order not in ("ASC", "DESC"):
         raise ValueError("Order must be 'ASC' or 'DESC'")
-    if ">ID" in filters and "<ID" in filters:
-        raise ValueError("ID filtering can't be used with '<' and '>'")
+    if {">ID", "<ID", ">=ID", "<=ID"} & set(filters):
+        raise ValueError("ID filtering can't be used with '<', '>', '>=' and '<='")
     if limit and limit <= 0:
         raise ValueError("Limit must be greater than 0")
-    f = {}
+    filters_copy = {}
     if order == "ASC":
-        f.update({">ID": 0})
+        filters_copy.update({">ID": 0})
     else:
-        f.update({"<ID": 2**32})
+        filters_copy.update({"<ID": 2**32})
     if "<ID" in filters:
         id_key = "<ID"
     else:
         id_key = ">ID"
-    f.update(filters)
+    filters_copy.update(filters)
     result = []
     while True:
-        leads : list[dict] | None = post("crm.lead.list", {"filter": f, "select": select, "order": {"ID": order}, "start": -1})
+        leads : list[dict] | None = post("crm.lead.list", {"filter": filters_copy, "select": select, "order": {"ID": order}, "start": -1})
         if not leads:
             break
         for lead in leads:
             if limit and len(result) >= limit:
                 return result
-            f[id_key] = lead["ID"]
+            filters_copy[id_key] = lead["ID"]
             result.append(lead)
     return result if result else None

@@ -21,28 +21,28 @@ def get_contacts(filters: dict, select: list, order: Literal["ASC", "DESC"] = "A
         raise ValueError("Select must be a list")
     if order not in ("ASC", "DESC"):
         raise ValueError("Order must be 'ASC' or 'DESC'")
-    if ">ID" in filters and "<ID" in filters:
-        raise ValueError("ID filtering can't be used with '<' and '>'")
+    if {">ID", "<ID", ">=ID", "<=ID"} & set(filters):
+        raise ValueError("ID filtering can't be used with '<', '>', '>=' and '<='")
     if limit and limit <= 0:
         raise ValueError("Limit must be greater than 0")
-    f = {}
+    filters_copy = {}
     if order == "ASC":
-        f.update({">ID": 0})
+        filters_copy.update({">ID": 0})
     else:
-        f.update({"<ID": 2**32})
+        filters_copy.update({"<ID": 2**32})
     if "<ID" in filters:
         id_key = "<ID"
     else:
         id_key = ">ID"
-    f.update(filters)
+    filters_copy.update(filters)
     result = []
     while True:
-        contacts : list[dict] | None = post("crm.contact.list", {"filter": f, "select": select, "order": {"ID": order}, "start": -1})
+        contacts : list[dict] | None = post("crm.contact.list", {"filter": filters_copy, "select": select, "order": {"ID": order}, "start": -1})
         if not contacts:
             break
         for contact in contacts:
             if limit and len(result) >= limit:
                 return result
-            f[id_key] = contact["ID"]
+            filters_copy[id_key] = contact["ID"]
             result.append(contact)
     return result if result else None
