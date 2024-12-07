@@ -1,10 +1,7 @@
 import time
-import json
 import logging
 import requests
-from requests import Response
 from requests.exceptions import RequestException
-from json.decoder import JSONDecodeError
 from ._url import get_url
 from ._init import pause_
 
