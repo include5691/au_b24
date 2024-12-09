@@ -4,9 +4,12 @@ from ...reqs import post, get
 def get_smart(entity_id: str | int, smart_id: str | int) -> dict | None:
     """Get smart by given entity type id and smart item id"""
     response = get("crm.item.get", {"entityTypeId": entity_id, "id": smart_id})
-    if not response:
+    if not response or not isinstance(response, dict):
         return None
-    return response.get("item")
+    item = response.get("item")
+    if not item or not isinstance(item, dict):
+        return None
+    return item
 
 def get_smarts(entity_id: str | int, filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC", limit: int | None = None) -> list[dict]:
     """
