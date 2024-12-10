@@ -39,8 +39,10 @@ def get_contacts(filters: dict, select: list, order: Literal["ASC", "DESC"] = "A
         if not contacts:
             break
         for contact in contacts:
-            if limit and len(result) >= limit:
-                return result
+            if not contact or not isinstance(contact, dict):
+                continue
             filters_copy[id_key] = contact["ID"]
             result.append(contact)
+            if limit and len(result) >= limit:
+                return result
     return result if result else None

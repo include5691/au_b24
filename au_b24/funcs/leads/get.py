@@ -39,8 +39,10 @@ def get_leads(filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC"
         if not leads:
             break
         for lead in leads:
-            if limit and len(result) >= limit:
-                return result
+            if not lead or not isinstance(lead, dict):
+                continue
             filters_copy[id_key] = lead["ID"]
             result.append(lead)
+            if limit and len(result) >= limit:
+                return result
     return result if result else None

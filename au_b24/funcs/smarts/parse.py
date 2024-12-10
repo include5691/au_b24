@@ -34,6 +34,8 @@ def parse_smarts(fn: Callable):
                 break
             for smart in smarts:
                 start += 1
+                if not smart or not isinstance(smart, dict):
+                    continue
                 smart_id = smart.get("id")
                 if not last_smart_id:
                     last_smart_id = smart_id

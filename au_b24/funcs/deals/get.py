@@ -39,8 +39,10 @@ def get_deals(filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC"
         if not deals:
             break
         for deal in deals:
-            if limit and len(result) >= limit:
-                return result
+            if not deal or not isinstance(deal, dict):
+                continue
             filters_copy[id_key] = deal["ID"]
             result.append(deal)
+            if limit and len(result) >= limit:
+                return result
     return result if result else None

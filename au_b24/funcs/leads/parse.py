@@ -34,6 +34,8 @@ def parse_leads(fn: Callable):
             if not leads:
                 break
             for lead in leads:
+                if not lead or not isinstance(lead, dict):
+                    continue
                 filters_copy[id_key] = lead["ID"]
                 try:
                     fn(lead, **kwargs)

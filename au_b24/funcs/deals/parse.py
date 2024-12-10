@@ -30,10 +30,12 @@ def parse_deals(fn: Callable):
             id_key = "<ID"
         filters_copy.update(filters)
         while True:
-            deals : list[dict] | None = post("crm.deal.list", {"filter": filters_copy, "select": select, "order": {"ID": order}, "start": -1})
+            deals: list[dict] | None = post("crm.deal.list", {"filter": filters_copy, "select": select, "order": {"ID": order}, "start": -1})
             if not deals:
                 break
             for deal in deals:
+                if not deal or not isinstance(deal, dict):
+                    continue
                 filters_copy[id_key] = deal["ID"]
                 try:
                     fn(deal, **kwargs)

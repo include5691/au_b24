@@ -43,8 +43,8 @@ def get_smarts(entity_id: str | int, filters: dict, select: list, order: Literal
         if not smarts:
             break
         for smart in smarts:
-            if limit and len(result) >= limit:
-                return result
+            if not smart or not isinstance(smart, dict):
+                continue
             smart_id = smart.get("id")
             if not last_smart_id:
                 last_smart_id = smart_id
@@ -54,4 +54,6 @@ def get_smarts(entity_id: str | int, filters: dict, select: list, order: Literal
                 return result
             last_smart_id = smart_id
             result.append(smart)
+            if limit and len(result) >= limit:
+                return result
     return result if result else None
