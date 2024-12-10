@@ -3,7 +3,10 @@ from ...reqs import post, get
 
 def get_deal(deal_id: str | int) -> dict | None:
     """Get deal by given deal_id"""
-    return get("crm.deal.get", {"id": deal_id})
+    deal = get("crm.deal.get", {"id": deal_id})
+    if not deal or not isinstance(deal, dict):
+        return None
+    return deal
 
 def get_deals(filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC", limit: int | None = None) -> list[dict]:
     """

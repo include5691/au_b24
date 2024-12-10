@@ -3,7 +3,10 @@ from ...reqs import post, get
 
 def get_contact(contact_id: str | int) -> dict | None:
     """Get contact by given contact_id"""
-    return get("crm.contact.get", {"id": contact_id})
+    contact = get("crm.contact.get", {"id": contact_id})
+    if not contact or not isinstance(contact, dict):
+        return None
+    return contact
 
 def get_contacts(filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC", limit: int | None = None) -> list[dict]:
     """
