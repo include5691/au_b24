@@ -12,8 +12,8 @@ def get_department(dep_id: str | int) -> dict | None:
 
 def get_all_departaments() -> list[dict] | None:
     """Get all departaments"""
-    dep_list = post("department.get", {})
-    if not dep_list or not isinstance(dep_list, list):
+    response = post("department.get", {})
+    if not response or not isinstance(response, list):
         return None
-    deps = [dep for dep in dep_list if dep and isinstance(dep, dict)]
+    deps = [dep for dep in response if dep and isinstance(dep, dict)]
     return deps if deps else None
