@@ -9,8 +9,18 @@ def get_user(user_id: int | str) -> dict | None:
 
 def get_users(filters: dict) -> list[dict] | None:
     """Get users by filters"""
-    response = post("user.get", {"filter": filters})
-    if not response or not isinstance(response, list):
-        return None
-    users = [user for user in response if user and isinstance(user, dict)]
-    return users if users else None
+    if {"ID", ">ID", "<ID", ">=ID", "<=ID"} & set(filters):
+        raise ValueError("ID filtering is forbidden")
+    filters = filters.copy()
+    filters[">ID"] = 0
+    result = []
+    while True:
+        users = post("user.get", {"filter": filters, "order": "ASC"})
+        if not users or not isinstance(users, list):
+            break
+        for user in users:
+            if not user or not isinstance(user, dict):
+                continue
+            filters[">ID"] = user["ID"]
+            result.append(user)
+    return result if result else None
