@@ -28,17 +28,16 @@ def get_deals(filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC"
         raise ValueError("ID filtering can't be used with '<', '>', '>=' and '<='")
     if limit and limit <= 0:
         raise ValueError("Limit must be greater than 0")
-    filters_copy = {}
+    filters_copy = filters.copy()
     if order == "ASC":
         filters_copy.update({">ID": 0})
         id_key = ">ID"
     else:
         filters_copy.update({"<ID": 2**32})
         id_key = "<ID"
-    filters_copy.update(filters)
     result = []
     while True:
-        deals : list[dict] | None = post("crm.deal.list", {"filter": filters_copy, "select": select, "order": {"ID": order}, "start": -1})
+        deals: list[dict] | None = post("crm.deal.list", {"filter": filters_copy, "select": select, "order": {"ID": order}, "start": -1})
         if not deals:
             break
         for deal in deals:

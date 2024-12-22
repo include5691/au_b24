@@ -21,14 +21,13 @@ def parse_leads(fn: Callable):
             raise ValueError("Order must be 'ASC' or 'DESC'")
         if {">ID", "<ID", ">=ID", "<=ID"} & set(filters):
             raise ValueError("ID filtering can't be used with '<', '>', '>=' and '<='")
-        filters_copy = {}
+        filters_copy = filters.copy()
         if order == "ASC":
             filters_copy.update({">ID": 0})
             id_key = ">ID"
         else:
             filters_copy.update({"<ID": 2**32})
             id_key = "<ID"
-        filters_copy.update(filters)
         while True:
             leads : list[dict] | None = post("crm.lead.list", {"filter": filters_copy, "select": select, "order": {"ID": order}, "start": -1})
             if not leads:
