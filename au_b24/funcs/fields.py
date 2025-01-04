@@ -1,7 +1,7 @@
 from typing import Literal
 from ..reqs import post
 
-def extract_enumerated_field_value(entity_type: Literal["lead", "deal"], field_id: str, key: str | int) -> str | None:
+def extract_enumerated_field_value(entity_type: Literal["lead", "deal"], field_id: str, value: str | int) -> str | None:
     """Extract enumerated field value by its id and value"""
     if entity_type not in ["lead", "deal"]:
         raise ValueError("entity_type must be 'lead' or 'deal'")
@@ -14,11 +14,11 @@ def extract_enumerated_field_value(entity_type: Literal["lead", "deal"], field_i
     if field.get("type") != "enumeration":
         raise ValueError("Field is not enumeration")
     for item in field.get("items"):
-        if item.get("ID") == str(key):
+        if item.get("ID") == str(value):
             return item.get("VALUE")
     return None
 
-def extract_enumerated_smart_field_value(entity_id: str | int, field_id: str, key: str | int) -> str | None:
+def extract_enumerated_smart_field_value(entity_id: str | int, field_id: str, value: str | int) -> str | None:
     """Extract enumerated smart process field value by its id and value"""
     response = post("crm.item.fields", {"entityTypeId": entity_id})
     if not response:
@@ -32,6 +32,6 @@ def extract_enumerated_smart_field_value(entity_id: str | int, field_id: str, ke
     if field.get("type") != "enumeration":
         raise ValueError("Field is not enumeration")
     for item in field.get("items"):
-        if item.get("ID") == str(key):
+        if item.get("ID") == str(value):
             return item.get("VALUE")
     return None
