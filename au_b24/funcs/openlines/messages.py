@@ -9,6 +9,5 @@ def get_openline_messages(openline_id: int | str, session_id: int | str) -> list
     if not messages_dict or not isinstance(messages_dict, dict):
         return None
     messages = list(messages_dict.values())
-    if not messages[0] or not isinstance(messages[0], dict):
-        return None
-    return messages
+    messages = [message for message in messages if message and isinstance(message, dict)]
+    return messages if messages else None
