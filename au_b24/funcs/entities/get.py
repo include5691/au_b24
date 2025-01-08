@@ -1,7 +1,7 @@
 from typing import Literal
 from ...reqs import post
 
-def get_entities(entity_type: Literal["lead", "deal", "contact"], filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC", limit: int | None = None) -> list[dict]:
+def get_entities(entity_type: Literal["lead", "deal", "contact"], filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC", limit: int | None = None) -> list[dict] | None:
     """
     :param filters: filters by fields, allowing '<', '>' and '!' logical symbols, and grouping by []. ID filtering allowing too
     :param select: list of selected fields. Passing '*' will select all fields

@@ -9,7 +9,7 @@ def get_lead(lead_id: str | int) -> dict | None:
         return None
     return lead
 
-def get_leads(filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC", limit: int | None = None) -> list[dict]:
+def get_leads(filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC", limit: int | None = None) -> list[dict] | None:
     """
     Get leads by filters
     """

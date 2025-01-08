@@ -9,7 +9,7 @@ def get_deal(deal_id: str | int) -> dict | None:
         return None
     return deal
 
-def get_deals(filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC", limit: int | None = None) -> list[dict]:
+def get_deals(filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC", limit: int | None = None) -> list[dict] | None:
     """
     Get deals by filters
     """

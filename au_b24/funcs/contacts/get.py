@@ -9,7 +9,7 @@ def get_contact(contact_id: str | int) -> dict | None:
         return None
     return contact
 
-def get_contacts(filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC", limit: int | None = None) -> list[dict]:
+def get_contacts(filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC", limit: int | None = None) -> list[dict] | None:
     """
     Get contacts by filters
     """
