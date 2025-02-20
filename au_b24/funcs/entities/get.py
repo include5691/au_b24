@@ -10,7 +10,7 @@ def get_entities(entity_type: Literal["lead", "deal", "contact"], filters: dict,
     if entity_type not in ["lead", "deal", "contact"]:
         raise ValueError("Entity type incorrect")
     if not isinstance(filters, dict):
-        raise ValueError("Filters and select must be a dict")
+        raise ValueError("Filters must be a dict")
     if not select:
         raise ValueError("Select is not provided")
     if not isinstance(select, list):

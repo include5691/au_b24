@@ -1,0 +1,37 @@
+from typing import Literal
+from ..reqs import post
+
+def get_tasks(filters: dict, select: list, order: Literal['asc', 'desc'] = 'asc') -> list[dict] | None:
+    """Get tasks by entity"""
+    if not isinstance(filters, dict):
+        raise ValueError("Filters must be a dict")
+    if not select:
+        raise ValueError("Select is not provided")
+    if not isinstance(select, list):
+        raise ValueError("Select must be a list")
+    if order not in ('asc', 'desc'):
+        raise ValueError("Order must be 'asc' or 'desc")
+    if {">ID", "<ID", ">=ID", "<=ID"} & set(filters):
+        raise ValueError("id filtering can't be used with '<', '>', '>=' and '<='")
+    filters_copy = filters.copy()
+    if order == "asc":
+        filters_copy.update({">ID": 0})
+        id_key = ">ID"
+    else:
+        filters_copy.update({"<ID": 2**32})
+        id_key = "<ID"
+    result = []
+    while True:
+        response = post("tasks.task.list", {"filter": filters_copy, "select": select, 'order': {"ID": order}, "start": "-1"})
+        if not response or not "tasks" in response:
+            break
+        tasks = response["tasks"]
+        if not tasks or not isinstance(tasks, list):
+            break
+        print(tasks)
+        for task in tasks:
+            if not task or not isinstance(task, dict):
+                continue
+            filters_copy[id_key] = task["id"]
+            result.append(task)
+    return result if result else None
