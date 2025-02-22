@@ -1,7 +1,7 @@
 from typing import Literal
 from ..reqs import post
 
-def get_tasks(filters: dict, select: list, order: Literal['asc', 'desc'] = 'asc') -> list[dict] | None:
+def get_tasks(filters: dict, select: list, order: Literal['asc', 'desc'] = 'asc') -> list[dict]:
     """Get tasks by entity"""
     if not isinstance(filters, dict):
         raise ValueError("Filters must be a dict")
@@ -28,10 +28,9 @@ def get_tasks(filters: dict, select: list, order: Literal['asc', 'desc'] = 'asc'
         tasks = response["tasks"]
         if not tasks or not isinstance(tasks, list):
             break
-        print(tasks)
         for task in tasks:
             if not task or not isinstance(task, dict):
                 continue
             filters_copy[id_key] = task["id"]
             result.append(task)
-    return result if result else None
+    return result
