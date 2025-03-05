@@ -2,7 +2,11 @@ from typing import Literal
 from ..reqs import post
 
 def get_tasks(filters: dict, select: list, order: Literal['asc', 'desc'] = 'asc') -> list[dict]:
-    """Get tasks by entity"""
+    """
+    Get tasks by filter  
+    To filter by CRM entity use 'UF_CRM_TASK' field, 'D_<deal_id>' for deals, 'L_<lead_id>' for leads  
+    NOTE: 'id' field name is lower 
+    """
     if not isinstance(filters, dict):
         raise ValueError("Filters must be a dict")
     if not select:
