@@ -34,3 +34,7 @@ def get_tasks(filters: dict, select: list, order: Literal['asc', 'desc'] = 'asc'
             filters_copy[id_key] = task["id"]
             result.append(task)
     return result
+
+def delete_task(task_id: str | int) -> bool:
+    result = post("tasks.task.delete", {"taskId": task_id})
+    return bool(result and isinstance(result, dict) and "task" in result and result.get("task"))
