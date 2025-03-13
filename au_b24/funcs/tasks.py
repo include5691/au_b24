@@ -42,3 +42,16 @@ def get_tasks(filters: dict, select: list, order: Literal['asc', 'desc'] = 'asc'
 def delete_task(task_id: str | int) -> bool:
     result = post("tasks.task.delete", {"taskId": task_id})
     return bool(result and isinstance(result, dict) and "task" in result and result.get("task"))
+
+def add_task(title: str, created_by: str | int, responsible_id: str | int, extra_fields: dict | None = None) -> int | None:
+    "Create tasks with mandatory and arbitrary (extra) fields"
+    result = post("tasks.task.add", {"fields": {"TITLE": title, "CREATED_BY": created_by, "RESPONSIBLE_ID": responsible_id} | extra_fields})
+    if not result or not isinstance(result, dict):
+        return
+    task = result.get("task")
+    if not task or not isinstance(task, dict):
+        return
+    task_id = task.get("id")
+    if not task_id or not isinstance(task_id, str) or not task_id.isdecimal():
+        return
+    return int(task_id)
