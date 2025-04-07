@@ -18,5 +18,5 @@ def get_deal_categories() -> dict[int, str] | None:
         category_name = category.get("name")
         if not category_name or not isinstance(category_name, str):
             continue
-        result[category_id] = category_name
+        result[str(category_id)] = category_name
     return result
