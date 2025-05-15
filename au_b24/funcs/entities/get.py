@@ -1,13 +1,13 @@
 from typing import Literal
 from ...reqs import post
 
-def get_entities(entity_type: Literal["lead", "deal", "contact"], filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC", limit: int | None = None) -> list[dict] | None:
+def get_entities(entity_type: Literal["lead", "deal", "contact", "product"], filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC", limit: int | None = None) -> list[dict] | None:
     """
     :param filters: filters by fields, allowing '<', '>' and '!' logical symbols, and grouping by []. ID filtering allowing too
     :param select: list of selected fields. Passing '*' will select all fields
     :param order: sorting by id
     """
-    if entity_type not in ["lead", "deal", "contact"]:
+    if entity_type not in ["lead", "deal", "contact", "product"]:
         raise ValueError("Entity type incorrect")
     if not isinstance(filters, dict):
         raise ValueError("Filters must be a dict")
