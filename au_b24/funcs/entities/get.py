@@ -1,3 +1,4 @@
+import logging
 from typing import Literal
 from ...reqs import post
 
@@ -31,6 +32,9 @@ def get_entities(entity_type: Literal["lead", "deal", "contact", "product"], fil
     result = []
     while True:
         entities: list[dict] | None = post(f"crm.{entity_type}.list", {"filter": filters_copy, "select": select, "order": {"ID": order}, "start": -1})
+        if not isinstance(entities, (list)):
+            logging.error(f"Error in request for 'crm.{entity_type}.list' method. Response: {entities}")
+            return None
         if not entities:
             break
         for entity in entities:
@@ -40,4 +44,4 @@ def get_entities(entity_type: Literal["lead", "deal", "contact", "product"], fil
             result.append(entity)
             if limit and len(result) >= limit:
                 return result
-    return result if result else None
+    return result
