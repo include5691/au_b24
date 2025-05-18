@@ -1,4 +1,3 @@
-from typing import Literal
 from ...reqs import post
 
 def create_product(name: str, fields: dict | None = None) -> int | None:
