@@ -1,5 +1,5 @@
 from typing import Literal
-from ..reqs import post
+from ...reqs import post
 
 def extract_enumerated_field_value(entity_type: Literal["lead", "deal"], field_id: str, value: str | int) -> str | None:
     """Extract enumerated field value by its id and value"""
