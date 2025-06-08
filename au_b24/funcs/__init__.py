@@ -16,3 +16,4 @@ from .links import create_crm_link
 from .deps import get_department, get_all_departaments
 from .tasks import get_tasks, delete_task, add_task
 from .products import *
+from .activities import get_activities

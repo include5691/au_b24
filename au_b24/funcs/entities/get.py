@@ -1,14 +1,23 @@
 import logging
 from typing import Literal
-from ...reqs import post
 
-def get_entities(entity_type: Literal["lead", "deal", "contact", "product"], filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC", limit: int | None = None) -> list[dict] | None:
+from ...reqs import post
+from .types_ import EntityType
+
+
+def get_entities(
+    entity_type: EntityType,
+    filters: dict,
+    select: list,
+    order: Literal["ASC", "DESC"] = "ASC",
+    limit: int | None = None,
+) -> list[dict] | None:
     """
     :param filters: filters by fields, allowing '<', '>' and '!' logical symbols, and grouping by []. ID filtering allowing too
     :param select: list of selected fields. Passing '*' will select all fields
     :param order: sorting by id
     """
-    if entity_type not in ["lead", "deal", "contact", "product"]:
+    if entity_type not in EntityType:
         raise ValueError("Entity type incorrect")
     if not isinstance(filters, dict):
         raise ValueError("Filters must be a dict")
@@ -31,9 +40,19 @@ def get_entities(entity_type: Literal["lead", "deal", "contact", "product"], fil
         id_key = "<ID"
     result = []
     while True:
-        entities: list[dict] | None = post(f"crm.{entity_type}.list", {"filter": filters_copy, "select": select, "order": {"ID": order}, "start": -1})
+        entities: list[dict] | None = post(
+            f"crm.{entity_type}.list",
+            {
+                "filter": filters_copy,
+                "select": select,
+                "order": {"ID": order},
+                "start": -1,
+            },
+        )
         if not isinstance(entities, (list)):
-            logging.error(f"Error in request for 'crm.{entity_type}.list' method. Response: {entities}")
+            logging.error(
+                f"Error in request for 'crm.{entity_type}.list' method. Response: {entities}"
+            )
             return None
         if not entities:
             break
