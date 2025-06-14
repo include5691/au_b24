@@ -2,11 +2,11 @@ import logging
 from typing import Literal
 
 from ...reqs import post
-from .types_ import EntityType
+from ...types_ import EntityType
 
 
 def get_entities(
-    entity_type: EntityType,
+    entity_type: EntityType | str,
     filters: dict,
     select: list,
     order: Literal["ASC", "DESC"] = "ASC",
@@ -17,8 +17,13 @@ def get_entities(
     :param select: list of selected fields. Passing '*' will select all fields
     :param order: sorting by id
     """
+    if isinstance(entity_type, str):
+        try:
+            entity_type = EntityType(entity_type)
+        except ValueError:
+            raise ValueError("Entity type (str) is incorrect")
     if entity_type not in EntityType:
-        raise ValueError("Entity type incorrect")
+        raise ValueError("Entity type (enum) incorrect")
     if not isinstance(filters, dict):
         raise ValueError("Filters must be a dict")
     if not select:
