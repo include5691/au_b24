@@ -1,4 +1,4 @@
-from ..reqs import get, post
+from ...reqs import get, post
 
 def get_department(dep_id: str | int) -> dict | None:
     """Get department by its id"""
