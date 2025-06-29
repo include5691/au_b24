@@ -2,6 +2,8 @@ from .get import get_lead
 
 def get_phone_by_lead(lead_id: str | int | None = None, lead: dict | None = None) -> str | None:
     """Get phone by given lead_id or by lead itself"""
+    if isinstance(lead_id, dict):
+        lead = lead_id
     lead = lead or get_lead(lead_id)
     if not lead or not isinstance(lead, dict):
         return None
