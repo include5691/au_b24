@@ -47,9 +47,13 @@ async def add_task(title: str, created_by: str | int, responsible_id: str | int,
     "Create tasks with mandatory and arbitrary (extra) fields"
     extra_fields = extra_fields or {}
     extra_fields_formatted = {}
+    keys_to_skip = {"ID", "CREATED_BY", "RESPONSIBLE_ID"}
     for k, v in extra_fields.items():
         if isinstance(k, str):
-            extra_fields_formatted[k.upper()] = v
+            key = k.upper()
+            if key in keys_to_skip:
+                continue
+            extra_fields_formatted[key] = v
     result = await post("tasks.task.add", {"fields": {"TITLE": title, "CREATED_BY": created_by, "RESPONSIBLE_ID": responsible_id} | extra_fields_formatted})
     if not result or not isinstance(result, dict):
         return
