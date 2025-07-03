@@ -28,6 +28,7 @@ def parse_entities(entity_type: Literal["lead", "deal", "contact"], fn: Callable
         else:
             filters_copy.update({"<ID": 2**32})
             id_key = "<ID"
+        counter = 0
         while True:
             entities: list[dict] | None = post(f"crm.{entity_type}.list", {"filter": filters_copy, "select": select, "order": {"ID": order}, "start": -1})
             if not entities:
@@ -37,7 +38,8 @@ def parse_entities(entity_type: Literal["lead", "deal", "contact"], fn: Callable
                     continue
                 filters_copy[id_key] = entity["ID"]
                 try:
-                    fn(entity, **kwargs)
+                    counter += 1
+                    fn(entity, counter=counter, **kwargs)
                 except StopParsing:
                     return
     return wrapper

@@ -30,6 +30,7 @@ def parse_entities(entity_type: Literal["lead", "deal", "contact"], fn: Callable
             else:
                 filters_copy.update({"<ID": 2**32})
                 id_key = "<ID"
+            counter = 0
             while True:
                 entities: list[dict] | None = await post(f"crm.{entity_type}.list", {"filter": filters_copy, "select": select, "order": {"ID": order}, "start": -1})
                 if not entities:
@@ -39,10 +40,11 @@ def parse_entities(entity_type: Literal["lead", "deal", "contact"], fn: Callable
                         continue
                     filters_copy[id_key] = entity["ID"]
                     try:
+                        counter += 1
                         if inspect.iscoroutinefunction(fn):
-                            await fn(entity, **kwargs)
+                            await fn(entity, counter=counter, **kwargs)
                         else:
-                            fn(entity, **kwargs)
+                            fn(entity, counter=counter, **kwargs)
                     except StopParsing:
                         return
         return async_wrapper()
