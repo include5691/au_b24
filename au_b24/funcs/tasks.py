@@ -45,7 +45,12 @@ def delete_task(task_id: str | int) -> bool:
 
 def add_task(title: str, created_by: str | int, responsible_id: str | int, extra_fields: dict | None = None) -> int | None:
     "Create tasks with mandatory and arbitrary (extra) fields"
-    result = post("tasks.task.add", {"fields": {"TITLE": title, "CREATED_BY": created_by, "RESPONSIBLE_ID": responsible_id} | (extra_fields or {})})
+    extra_fields = extra_fields or {}
+    extra_fields_formatted = {}
+    for k, v in extra_fields.items():
+        if isinstance(k, str):
+            extra_fields_formatted[k.upper()] = v
+    result = post("tasks.task.add", {"fields": {"TITLE": title, "CREATED_BY": created_by, "RESPONSIBLE_ID": responsible_id} | extra_fields_formatted})
     if not result or not isinstance(result, dict):
         return
     task = result.get("task")
