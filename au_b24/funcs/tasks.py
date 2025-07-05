@@ -43,8 +43,16 @@ def delete_task(task_id: str | int) -> bool:
     result = post("tasks.task.delete", {"taskId": task_id})
     return bool(result and isinstance(result, dict) and "task" in result and result.get("task"))
 
-def add_task(title: str, created_by: str | int, responsible_id: str | int, extra_fields: dict | None = None) -> int | None:
+def add_task(title: str | None = None, created_by: str | int | None = None, responsible_id: str | int | None = None, extra_fields: dict | None = None, **kwargs) -> int | None:
     "Create tasks with mandatory and arbitrary (extra) fields"
+    if kwargs:
+        if "TITLE" in kwargs:
+            title = kwargs["TITLE"]
+        if "CREATED_BY" in kwargs:
+            created_by = kwargs["CREATED_BY"]
+        if "RESPONSIBLE_ID" in kwargs:
+            responsible_id = kwargs["RESPONSIBLE_ID"]
+        extra_fields.update(kwargs)
     extra_fields = extra_fields or {}
     extra_fields_formatted = {}
     keys_to_skip = {"ID", "CREATED_BY", "RESPONSIBLE_ID"}
