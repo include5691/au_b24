@@ -45,6 +45,7 @@ async def delete_task(task_id: str | int) -> bool:
 
 async def add_task(title: str | None = None, created_by: str | int | None = None, responsible_id: str | int | None = None, extra_fields: dict | None = None, **kwargs) -> int | None:
     "Create tasks with mandatory and arbitrary (extra) fields"
+    extra_fields = extra_fields or {}
     if kwargs:
         if "TITLE" in kwargs:
             title = kwargs["TITLE"]
@@ -53,7 +54,6 @@ async def add_task(title: str | None = None, created_by: str | int | None = None
         if "RESPONSIBLE_ID" in kwargs:
             responsible_id = kwargs["RESPONSIBLE_ID"]
         extra_fields.update(kwargs)
-    extra_fields = extra_fields or {}
     extra_fields_formatted = {}
     keys_to_skip = {"ID", "CREATED_BY", "RESPONSIBLE_ID"}
     for k, v in extra_fields.items():
