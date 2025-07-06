@@ -32,6 +32,9 @@ async def post(method: str, data: dict, usertoken: str | None = None) -> list | 
     except ClientError as e:
         logging.error(f"Error in posting method {method}: {e}")
         return None
+    except asyncio.TimeoutError as e:
+        logging.error(f"Timeout error in posting method {method}: {e}")
+        return None
 
 async def get(method: str, data: dict) -> dict | None:
     """Get request method for b24 which method allowing passing only id"""
@@ -60,4 +63,7 @@ async def get(method: str, data: dict) -> dict | None:
                 return None
     except ClientError as e:
         logging.error(f"Error in posting method {method}: {e}")
+        return None
+    except asyncio.TimeoutError as e:
+        logging.error(f"Timeout error in posting method {method}: {e}")
         return None
