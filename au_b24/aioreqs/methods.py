@@ -3,7 +3,7 @@ import logging
 import aiohttp
 from aiohttp import ClientError
 from ..reqs._url import get_url
-from ..reqs._init import pause_
+from ..reqs._init import get_pause
 
 async def post(method: str, data: dict, usertoken: str | None = None) -> list | dict | None:
     """
@@ -13,7 +13,7 @@ async def post(method: str, data: dict, usertoken: str | None = None) -> list | 
     if not isinstance(method, str) or not isinstance(data, dict):
         return None
     url = get_url(method=method, usertoken=usertoken)
-    global pause_
+    pause_ = get_pause()
     if pause_:
         await asyncio.sleep(pause_)
     try:
@@ -45,7 +45,7 @@ async def get(method: str, data: dict) -> dict | None:
     url = get_url(method)
     if not url:
         return None
-    global pause_
+    pause_ = get_pause()
     if pause_:
         await asyncio.sleep(pause_)
     try:

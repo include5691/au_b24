@@ -3,7 +3,7 @@ import logging
 import requests
 from requests.exceptions import RequestException
 from ._url import get_url
-from ._init import pause_
+from ._init import get_pause
 
 def post(method: str, data: dict, usertoken: str | None = None) -> list | dict | None:
     """
@@ -13,7 +13,7 @@ def post(method: str, data: dict, usertoken: str | None = None) -> list | dict |
     if not isinstance(method, str) or not isinstance(data, dict):
         return None
     url = get_url(method=method, usertoken=usertoken)
-    global pause_
+    pause_ = get_pause()
     if pause_:
         time.sleep(pause_)
     try:
@@ -41,7 +41,7 @@ def get(method: str, data: dict) -> dict | None:
     url = get_url(method)
     if not url:
         return None
-    global pause_
+    pause_ = get_pause()
     if pause_:
         time.sleep(pause_)
     try:
