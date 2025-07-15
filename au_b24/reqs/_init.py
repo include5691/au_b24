@@ -8,3 +8,11 @@ def init_requests_pause(pause: float = 0) -> None:
     """
     global pause_
     pause_ = pause
+
+def get_pause() -> float:
+    """
+    Get requests pause
+    
+    :return: float, pause for bitrix24 rate lims
+    """
+    return pause_

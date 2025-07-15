@@ -1,7 +1,7 @@
 from typing import Literal
-from ..reqs import post
+from ..aioreqs import post
 
-def get_tasks(filters: dict, select: list, order: Literal['asc', 'desc'] = 'asc') -> list[dict]:
+async def get_tasks(filters: dict, select: list, order: Literal['asc', 'desc'] = 'asc') -> list[dict]:
     """
     Get tasks by filter  
     To filter by CRM entity use 'UF_CRM_TASK' field, 'D_<deal_id>' for deals, 'L_<lead_id>' for leads  
@@ -26,7 +26,7 @@ def get_tasks(filters: dict, select: list, order: Literal['asc', 'desc'] = 'asc'
         id_key = "<ID"
     result = []
     while True:
-        response = post("tasks.task.list", {"filter": filters_copy, "select": select, 'order': {"ID": order}, "start": "-1"})
+        response = await post("tasks.task.list", {"filter": filters_copy, "select": select, 'order': {"ID": order}, "start": "-1"})
         if not response or not "tasks" in response:
             break
         tasks = response["tasks"]
@@ -39,11 +39,11 @@ def get_tasks(filters: dict, select: list, order: Literal['asc', 'desc'] = 'asc'
             result.append(task)
     return result
 
-def delete_task(task_id: str | int) -> bool:
-    result = post("tasks.task.delete", {"taskId": task_id})
+async def delete_task(task_id: str | int) -> bool:
+    result = await post("tasks.task.delete", {"taskId": task_id})
     return bool(result and isinstance(result, dict) and "task" in result and result.get("task"))
 
-def add_task(title: str | None = None, created_by: str | int | None = None, responsible_id: str | int | None = None, extra_fields: dict | None = None, **kwargs) -> int | None:
+async def add_task(title: str | None = None, created_by: str | int | None = None, responsible_id: str | int | None = None, extra_fields: dict | None = None, **kwargs) -> int | None:
     "Create tasks with mandatory and arbitrary (extra) fields"
     extra_fields = extra_fields or {}
     if kwargs:
@@ -62,7 +62,7 @@ def add_task(title: str | None = None, created_by: str | int | None = None, resp
             if key in keys_to_skip:
                 continue
             extra_fields_formatted[key] = v
-    result = post("tasks.task.add", {"fields": {"TITLE": title, "CREATED_BY": created_by, "RESPONSIBLE_ID": responsible_id} | extra_fields_formatted})
+    result = await post("tasks.task.add", {"fields": {"TITLE": title, "CREATED_BY": created_by, "RESPONSIBLE_ID": responsible_id} | extra_fields_formatted})
     if not result or not isinstance(result, dict):
         return
     task = result.get("task")
