@@ -7,6 +7,8 @@ async def get_dep_name(
     """
     Get department name by dep_id or dep dict
     """
+    if not dep_id and not dep:
+        return None
     if dep_id and isinstance(dep_id, dict):
         dep = dep_id
     dep = dep or await get_department(dep_id)
