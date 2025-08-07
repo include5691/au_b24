@@ -121,6 +121,7 @@ au_b24.update_lead(123, {"TITLE": "Updated Title"})
 - `get_tasks(filters, select, order)` - Get tasks
 - `add_task(title, created_by, responsible_id, extra_fields)` - Create task
 - `delete_task(task_id)` - Delete task
+- `parse_tasks(function)` - Parse all tasks with custom function
 
 ### 🏢 Department Management
 - `get_department(dep_id)` - Get department info
