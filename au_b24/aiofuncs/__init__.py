@@ -13,6 +13,6 @@ from .exceptions import StopParsing
 from .fields import *
 from .links import create_crm_link
 from .departments import *
-from .tasks import get_tasks, delete_task, add_task
+from .tasks import get_tasks, delete_task, add_task, parse_tasks
 from .products import *
 from .activities import get_activities
