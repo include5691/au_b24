@@ -1,7 +1,13 @@
 from typing import Literal
 from ...reqs import post
 
-def get_tasks(filters: dict, select: list, order: Literal['asc', 'desc'] = 'asc') -> list[dict]:
+
+def get_tasks(
+    filters: dict,
+    select: list,
+    order: Literal["asc", "desc"] = "asc",
+    limit: int | None = None,
+) -> list[dict]:
     """
     Get tasks by filter
     To filter by CRM entity use 'UF_CRM_TASK' field, 'D_<deal_id>' for deals, 'L_<lead_id>' for leads
@@ -13,10 +19,12 @@ def get_tasks(filters: dict, select: list, order: Literal['asc', 'desc'] = 'asc'
         raise ValueError("Select is not provided")
     if not isinstance(select, list):
         raise ValueError("Select must be a list")
-    if order not in ('asc', 'desc'):
+    if order not in ("asc", "desc"):
         raise ValueError("Order must be 'asc' or 'desc")
     if {">ID", "<ID", ">=ID", "<=ID"} & set(filters):
         raise ValueError("id filtering can't be used with '<', '>', '>=' and '<='")
+    if limit and limit <= 0:
+        raise ValueError("Limit must be greater than 0")
     filters_copy = filters.copy()
     if order == "asc":
         filters_copy.update({">ID": 0})
@@ -26,7 +34,15 @@ def get_tasks(filters: dict, select: list, order: Literal['asc', 'desc'] = 'asc'
         id_key = "<ID"
     result = []
     while True:
-        response = post("tasks.task.list", {"filter": filters_copy, "select": select, 'order': {"ID": order}, "start": "-1"})
+        response = post(
+            "tasks.task.list",
+            {
+                "filter": filters_copy,
+                "select": select,
+                "order": {"ID": order},
+                "start": "-1",
+            },
+        )
         if not response or not "tasks" in response:
             break
         tasks = response["tasks"]
@@ -37,4 +53,6 @@ def get_tasks(filters: dict, select: list, order: Literal['asc', 'desc'] = 'asc'
                 continue
             filters_copy[id_key] = task["id"]
             result.append(task)
+            if limit and len(result) >= limit:
+                return result
     return result
