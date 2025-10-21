@@ -47,7 +47,7 @@ def get_tasks(
             break
         tasks = response["tasks"]
         if not tasks or not isinstance(tasks, list):
-            break
+            return result
         for task in tasks:
             if not task or not isinstance(task, dict):
                 continue
@@ -55,4 +55,3 @@ def get_tasks(
             result.append(task)
             if limit and len(result) >= limit:
                 return result
-    return result
