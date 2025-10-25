@@ -1,7 +1,17 @@
 from ...aioreqs import post
 
-async def add_task(title: str | None = None, created_by: str | int | None = None, responsible_id: str | int | None = None, extra_fields: dict | None = None, **kwargs) -> int | None:
-    "Create tasks with mandatory and arbitrary (extra) fields"
+
+async def add_task(
+    title: str | None = None,
+    created_by: str | int | None = None,
+    responsible_id: str | int | None = None,
+    extra_fields: dict | None = None,
+    **kwargs
+) -> int | None:
+    """
+    Create tasks with mandatory and arbitrary (extra) fields
+    NOTE: to bind task to CRM entity use 'UF_CRM_TASK=[f"L\D_{entity_id}"]', for example 'UF_CRM_TASK=["D_123"]' to bind to deal with ID 123
+    """
     extra_fields = extra_fields or {}
     if kwargs:
         if "TITLE" in kwargs:
@@ -19,7 +29,17 @@ async def add_task(title: str | None = None, created_by: str | int | None = None
             if key in keys_to_skip:
                 continue
             extra_fields_formatted[key] = v
-    result = await post("tasks.task.add", {"fields": {"TITLE": title, "CREATED_BY": created_by, "RESPONSIBLE_ID": responsible_id} | extra_fields_formatted})
+    result = await post(
+        "tasks.task.add",
+        {
+            "fields": {
+                "TITLE": title,
+                "CREATED_BY": created_by,
+                "RESPONSIBLE_ID": responsible_id,
+            }
+            | extra_fields_formatted
+        },
+    )
     if not result or not isinstance(result, dict):
         return
     task = result.get("task")
