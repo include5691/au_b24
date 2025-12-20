@@ -16,3 +16,4 @@ from .departments import *
 from .tasks import get_tasks, delete_task, add_task, parse_tasks
 from .products import *
 from .activities import get_activities
+from .addresses import get_addresses, add_address
