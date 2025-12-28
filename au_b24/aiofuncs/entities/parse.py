@@ -3,15 +3,25 @@ from typing import Literal, Callable
 from ...aioreqs import post
 from ..exceptions import StopParsing
 
+
 def parse_entities(entity_type: Literal["lead", "deal", "contact"], fn: Callable):
     if entity_type not in ["lead", "deal", "contact"]:
         raise ValueError("Entity type incorrect")
-    def wrapper(filters: dict, select: list, order: Literal["ASC", "DESC"] = "ASC", allow_id_filter: bool = False, **kwargs):
+
+    def wrapper(
+        *args,
+        filters: dict,
+        select: list,
+        order: Literal["ASC", "DESC"] = "ASC",
+        allow_id_filter: bool = False,
+        **kwargs,
+    ):
         """
         :param filters: filters by fields, allowing '<', '>' and '!' logical symbols, and grouping by []. ID filtering allowing too
         :param select: list of selected fields. Passing '*' will select all fields
         :param order: sorting by id
         """
+
         async def async_wrapper():
             nonlocal order, allow_id_filter
             if not isinstance(filters, dict):
@@ -25,7 +35,9 @@ def parse_entities(entity_type: Literal["lead", "deal", "contact"], fn: Callable
             id_keys = list({">ID", "<ID", ">=ID", "<=ID"} & set(filters))
             if id_keys:
                 if not allow_id_filter:
-                    raise ValueError("ID filtering can't be used with '<', '>', '>=' and '<='")
+                    raise ValueError(
+                        "ID filtering can't be used with '<', '>', '>=' and '<='"
+                    )
                 allow_id_filter = True
                 for key in id_keys[1:]:
                     del filters[key]
@@ -47,7 +59,15 @@ def parse_entities(entity_type: Literal["lead", "deal", "contact"], fn: Callable
                     id_key = "<ID"
             counter = 0
             while True:
-                entities: list[dict] | None = await post(f"crm.{entity_type}.list", {"filter": filters_copy, "select": select, "order": {"ID": order}, "start": -1})
+                entities: list[dict] | None = await post(
+                    f"crm.{entity_type}.list",
+                    {
+                        "filter": filters_copy,
+                        "select": select,
+                        "order": {"ID": order},
+                        "start": -1,
+                    },
+                )
                 if not entities:
                     break
                 for entity in entities:
@@ -59,8 +79,10 @@ def parse_entities(entity_type: Literal["lead", "deal", "contact"], fn: Callable
                         if inspect.iscoroutinefunction(fn):
                             await fn(entity, counter=counter, **kwargs)
                         else:
-                            fn(entity, counter=counter, **kwargs)
+                            fn(*args, entity, counter=counter, **kwargs)
                     except StopParsing:
                         return
+
         return async_wrapper()
+
     return wrapper
