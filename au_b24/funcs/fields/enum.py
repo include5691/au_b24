@@ -4,7 +4,7 @@ from ...reqs import post
 def get_enumerated_field_values(entity_type: Literal["lead", "deal", "contact"], field_id: str) -> dict[str, str] | None:
     """Get enumerated field values by field id"""
     if entity_type not in ["lead", "deal", "contact"]:
-        raise ValueError("entity_type must be 'lead' or 'deal'")
+        raise ValueError("entity_type must be 'lead', 'deal' or 'contact'")
     fields = post(f"crm.{entity_type}.fields", {})
     if not fields:
         return None
