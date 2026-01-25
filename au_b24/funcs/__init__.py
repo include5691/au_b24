@@ -1,6 +1,7 @@
 from .leads import *
 from .deals import *
 from .contacts import *
+from .companies import *
 from .entities import *
 from .users import *
 from .calls import get_calls
