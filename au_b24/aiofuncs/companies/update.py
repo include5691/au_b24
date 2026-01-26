@@ -1,0 +1,6 @@
+from ...aioreqs import post
+
+
+async def update_company(company_id: str | int, fields: dict) -> bool:
+    """Update a company with given id and fields"""
+    return bool(await post("crm.company.update", {"id": company_id, "fields": fields}))
