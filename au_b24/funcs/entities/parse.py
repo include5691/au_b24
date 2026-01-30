@@ -3,8 +3,8 @@ from ...reqs import post
 from ..exceptions import StopParsing
 
 
-def parse_entities(entity_type: Literal["lead", "deal", "contact"], fn: Callable):
-    if entity_type not in ["lead", "deal", "contact"]:
+def parse_entities(entity_type: Literal["lead", "deal", "contact", "company"], fn: Callable):
+    if entity_type not in ["lead", "deal", "contact", "company"]:
         raise ValueError("Entity type incorrect")
 
     def wrapper(
