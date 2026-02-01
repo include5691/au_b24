@@ -2,6 +2,17 @@ from typing import Literal
 from ...aioreqs import post
 
 
+async def get_task(task_id: int | str, select: list | None = None) -> dict | None:
+    """Get task by given task_id"""
+    data = {"taskId": task_id}
+    if select:
+        data["select"] = select
+    response = await post("tasks.task.get", data)
+    if not response or not isinstance(response, dict) or "task" not in response:
+        return None
+    return response["task"]
+
+
 async def get_tasks(
     filters: dict,
     select: list,
