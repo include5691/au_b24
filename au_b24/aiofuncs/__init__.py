@@ -18,3 +18,4 @@ from .tasks import get_tasks, get_task, update_task, delete_task, add_task, pars
 from .products import *
 from .activities import get_activities
 from .addresses import get_addresses, add_address
+from .chats import *

@@ -19,3 +19,4 @@ from .tasks import *
 from .products import *
 from .activities import get_activities
 from .addresses import get_addresses, add_address
+from .chats import *
