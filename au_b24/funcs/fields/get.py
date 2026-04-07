@@ -12,3 +12,12 @@ def get_field(entity_type: Literal["lead", "deal", "contact"], field_id: str) ->
     if not field:
         return None
     return field
+
+def get_all_fields(entity_type: Literal["lead", "deal", "contact"]) -> dict[str, dict[str, str]] | None:
+    """Get all fields for entity type"""
+    if entity_type not in ["lead", "deal", "contact"]:
+        raise ValueError("entity_type must be 'lead', 'deal' or 'contact'")
+    fields = post(f"crm.{entity_type}.fields", {})
+    if not fields:
+        return None
+    return fields
