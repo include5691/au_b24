@@ -4,8 +4,9 @@ import aiohttp
 from aiohttp import ClientError
 from ..reqs._url import get_url
 from ..reqs._init import get_pause
+from ..reqs._curl import build_curl
 
-async def post(method: str, data: dict, usertoken: str | None = None) -> list | dict | None:
+async def post(method: str, data: dict, usertoken: str | None = None, log_curl: bool = False) -> list | dict | None:
     """
     Post request method for b24 with given data
     If usertoken is given - it will be used as auth token instead of one from .env file
@@ -18,6 +19,8 @@ async def post(method: str, data: dict, usertoken: str | None = None) -> list | 
         await asyncio.sleep(pause_)
     try:
         async with aiohttp.ClientSession() as session:
+            if log_curl:
+                logging.info(build_curl("POST", url, json=data))
             async with session.post(url=url, json=data, timeout=aiohttp.ClientTimeout(total=10)) as response:
                 if response.status != 200:
                     response_text = await response.text()
@@ -36,7 +39,7 @@ async def post(method: str, data: dict, usertoken: str | None = None) -> list | 
         logging.error(f"Timeout error in posting method {method}: {e}")
         return None
 
-async def get(method: str, data: dict) -> dict | None:
+async def get(method: str, data: dict, log_curl: bool = False) -> dict | None:
     """Get request method for b24 which method allowing passing only id"""
     if not isinstance(method, str) or not isinstance(data, dict):
         return None
@@ -50,6 +53,8 @@ async def get(method: str, data: dict) -> dict | None:
         await asyncio.sleep(pause_)
     try:
         async with aiohttp.ClientSession() as session:
+            if log_curl:
+                logging.info(build_curl("GET", url, params=data))
             async with session.get(url=url, params=data, timeout=aiohttp.ClientTimeout(total=10)) as response:
                 if response.status != 200:
                     response_text = await response.text()

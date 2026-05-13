@@ -4,8 +4,9 @@ import requests
 from requests.exceptions import RequestException
 from ._url import get_url
 from ._init import get_pause
+from ._curl import build_curl
 
-def post(method: str, data: dict, usertoken: str | None = None) -> list | dict | None:
+def post(method: str, data: dict, usertoken: str | None = None, log_curl: bool = False) -> list | dict | None:
     """
     Post request method for b24 with given data
     If usertoken is given - it will be used as auth token instead of one from .env file
@@ -18,6 +19,8 @@ def post(method: str, data: dict, usertoken: str | None = None) -> list | dict |
         time.sleep(pause_)
     try:
         with requests.Session() as session:
+            if log_curl:
+                logging.info(build_curl("POST", url, json=data))
             response = session.post(url=url, json=data, timeout=10)
             if response.status_code != 200:
                 logging.debug(f"Error in posting method, code: {response.status_code} with response: {response.text}")
@@ -32,7 +35,7 @@ def post(method: str, data: dict, usertoken: str | None = None) -> list | dict |
         logging.error(f"Error in posting method {method}: {e}")
         return None
 
-def get(method: str, data: dict) -> dict | None:
+def get(method: str, data: dict, log_curl: bool = False) -> dict | None:
     """Get request method for b24 which method allowing passing only id"""
     if not isinstance(method, str) or not isinstance(data, dict):
         return None
@@ -46,6 +49,8 @@ def get(method: str, data: dict) -> dict | None:
         time.sleep(pause_)
     try:
         with requests.Session() as session:
+            if log_curl:
+                logging.info(build_curl("GET", url, params=data))
             response = session.get(url=url, params=data, timeout=10)
             if response.status_code != 200:
                 logging.debug(f"Error in posting method, code: {response.status_code} with response: {response.text}")
